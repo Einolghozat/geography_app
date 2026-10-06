@@ -1,0 +1,23 @@
+# Virtual environment and installed libraries
+.venv/
+venv/
+env/
+venlib/
+
+# Python temporary files
+__pycache__/
+*.py[cod]
+
+# Software development output
+build/
+dist/
+*.exe
+
+# Personal settings and confidential information
+.env
+.env.*
+!.env.example
+
+# Windows temporary files
+Thumbs.db
+Desktop.ini
