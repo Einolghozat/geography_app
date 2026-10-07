@@ -7,6 +7,7 @@ venlib/
 # Python temporary files
 __pycache__/
 *.py[cod]
+Geography.spec
 /data/Vazirmatn-Bold.ttf
 /data/Vazirmatn-Black.ttf
 
