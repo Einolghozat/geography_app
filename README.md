@@ -4,7 +4,7 @@ A Persian desktop application created for lessons 1 and 2 of Iran’s ninth-grad
 
 The idea is simple: make geographic coordinates and local time easier to understand through an interactive world map.
 
-![Geography Explorer screenshot](image/screenshot.jpg)
+![Geography Explorer screenshot](image/geography.png)
 
 ## Built With
 

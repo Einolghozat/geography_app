@@ -16,7 +16,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from PySide6.QtCore import QPointF, QRectF, Qt, Signal, QTimer, QDate, QSettings, QLocale
-from PySide6.QtGui import QAction, QActionGroup, QColor, QFont, QFontDatabase, QPainter, QPainterPath, QPen, QKeySequence, QPolygonF
+from PySide6.QtGui import QAction, QActionGroup, QColor, QFont, QFontDatabase, QPainter, QPainterPath, QPen, QKeySequence, QPolygonF ,QIcon, QPixmap
 from PySide6.QtWidgets import (
     QApplication, QCheckBox, QComboBox, QDateEdit, QDialog, QDialogButtonBox,
     QFileDialog, QFormLayout, QFrame, QHBoxLayout, QLabel, QMainWindow,
@@ -527,17 +527,35 @@ class Explorer(QMainWindow):
         root.setContentsMargins(22, 14, 22, 14)
         root.setSpacing(12)
         header = QFrame()
-        header.setObjectName('header')
-        hl = QVBoxLayout(header)
-        hl.setContentsMargins(18, 13, 18, 13)
-        hl.setSpacing(4)
+        header.setObjectName("header")
+        header_layout = QHBoxLayout(header)
+        header_layout.setContentsMargins(20, 12, 20, 12)
+        header_layout.setSpacing(20)
+        header.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.header_logo = QLabel()
+        self.header_logo.setFixedSize(88, 88)
+        self.header_logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        pixmap = QPixmap(str(ROOT / "data" / "logo.png"))
+        self.header_logo.setPixmap(
+            pixmap.scaled(
+                80,
+                80,
+                Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation,
+            )
+        )
+        header_layout.addWidget(self.header_logo)
+        text_layout = QVBoxLayout()
+        text_layout.setSpacing(4)
         self.title = QLabel()
-        self.title.setObjectName('title')
+        self.title.setObjectName("title")
+        self.title.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
         self.byline = QLabel()
-        self.byline.setObjectName('byline')
-        for label in (self.title, self.byline):
-            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            hl.addWidget(label)
+        self.byline.setObjectName("byline")
+        self.byline.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        text_layout.addWidget(self.title)
+        text_layout.addWidget(self.byline)
+        header_layout.addLayout(text_layout, 1)
         root.addWidget(header)
         map_frame = QFrame()
         map_frame.setObjectName('mapFrame')
@@ -954,13 +972,30 @@ class Explorer(QMainWindow):
 
 
 def load_font(app):
-    folder = ROOT / 'fonts'
-    if folder.exists():
-        for file in sorted(folder.glob('*.ttf')):
-            QFontDatabase.addApplicationFont(str(file))
-    available = set(QFontDatabase.families())
-    family = next((name for name in ('Vazirmatn', 'Vazir', 'Tahoma', 'DejaVu Sans') if name in available), 'Sans Serif')
-    app.setFont(QFont(family, 10))
+    fonts_dir = ROOT / "data"
+    regular = fonts_dir / "Vazirmatn-Black.ttf"
+    bold = fonts_dir / "Vazirmatn-Bold.ttf"
+
+    font_id = QFontDatabase.addApplicationFont(str(regular))
+
+    if font_id == -1:
+        QMessageBox.warning(
+            None,
+            "خطای فونت",
+            "فونت وزیرمتن بارگذاری نشد.\n"
+            "وجود و سلامت این فایل را بررسی کنید:\n"
+            + str(regular),
+        )
+        app.setFont(QFont("Tahoma", 10))
+        return
+
+    if bold.exists():
+        QFontDatabase.addApplicationFont(str(bold))
+
+    families = QFontDatabase.applicationFontFamilies(font_id)
+
+    if families:
+        app.setFont(QFont(families[0], 10))
 
 
 def main():
@@ -969,6 +1004,7 @@ def main():
     app.setApplicationName('Geography Explorer')
     app.setOrganizationName('GeographyExplorer')
     load_font(app)
+    app.setWindowIcon(QIcon(str(ROOT / "logo.ico")))
     try:
         window = Explorer()
     except (OSError, ValueError, KeyError, TypeError, IndexError) as exc:
