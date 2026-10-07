@@ -7,6 +7,8 @@ venlib/
 # Python temporary files
 __pycache__/
 *.py[cod]
+/data/Vazirmatn-Bold.ttf
+/data/Vazirmatn-Black.ttf
 
 # Software development output
 build/
@@ -21,5 +23,3 @@ dist/
 # Windows temporary files
 Thumbs.db
 Desktop.ini
-/data/Vazirmatn-Bold.ttf
-/data/Vazirmatn-Black.ttf
