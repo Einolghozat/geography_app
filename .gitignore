@@ -1,5 +1,6 @@
 # Virtual environment and installed libraries
 .venv/
+.venv-win7/
 venv/
 env/
 venlib/
@@ -7,7 +8,7 @@ venlib/
 # Python temporary files
 __pycache__/
 *.py[cod]
-Geography.spec
+*.spec
 /data/Vazirmatn-Bold.ttf
 /data/Vazirmatn-Black.ttf
 
